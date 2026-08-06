@@ -1,0 +1,24 @@
+pipeline{
+    agent any 
+    tools{
+        maven 'mymaven'
+    }
+    stages{
+        stage('build the code'){
+            steps{
+                git 'https://github.com/allius01/DevOpsCodeDemo.git'
+            }
+        }
+        stage('review the code'){
+            steps{
+            sh 'mvn pmd:pmd'
+            }
+            
+        post{
+            success{
+                recordIssues sourceCodeRetention: 'LAST_BUILD', tools: [pmdParser(pattern: '**/pmd.xml')]
+            }
+        }
+        }
+    }
+}
