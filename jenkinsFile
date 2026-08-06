@@ -1,0 +1,27 @@
+// this pipeline will build the java code using mvn.
+// Also compile , test and package the code.
+pipeline{
+    agent any
+    
+    tool{
+        maven 'mymaven'
+    }
+    stages{
+        stage('clone the repo'){
+            steps{
+                git 'https://github.com/allius01/DevOpsCodeDemo.git'
+            }
+        }
+        stage('review the code'){
+            steps{
+            sh 'mvn pmd:pmd'
+            }
+        }
+        stage('package the code'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+    }
+
+}
