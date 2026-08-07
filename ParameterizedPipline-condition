@@ -1,0 +1,36 @@
+pipeline{
+    agent any
+    tools{
+        maven 'mymaven'
+    }
+    parameters{
+        choice(name:'ENV', choices:['DEV','QA'], description: 'Select the Environment')
+    }
+    stages{
+        stage('build the code for DEV'){
+            when{
+                expression{
+                    params.ENV == 'DEV'
+                }
+            }
+            steps{
+                git 'https://github.com/allius01/DevOpsCodeDemo.git'
+                sh 'mvn pmd:pmd'
+                sh 'mvn package' 
+            }
+        }
+        stage('build the code for QA'){
+            when{
+                expression{
+                    params.ENV == 'QA'
+                }
+            }
+            steps{
+                git 'https://github.com/allius01/DevOpsCodeDemo.git'
+                sh 'mvn pmd:pmd'
+                sh 'mvn package' 
+            }
+        }
+
+    }
+}
