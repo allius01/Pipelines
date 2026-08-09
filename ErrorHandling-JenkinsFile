@@ -1,0 +1,28 @@
+pipeline{
+    agent any 
+    tools{
+        maven 'mymaven'
+    }
+    stages{
+        stage('Fetch the code'){
+            steps{
+            git 'https://github.com/allius01/DevOpsCodeDemo.git'
+            catchError(buildResult:'SUCCESS', stageResult:'FAILURE'){
+                sh 'mvn pmd:Pmd'
+            }
+            }
+        }
+        stage('Test the code'){
+            steps{
+            catchError(buildResult: 'SUCCESS', stageResult:'FAILURE'){
+                sh 'mvn Test'
+            }
+            }
+        }
+        stage('Package the code'){
+            steps{
+            sh 'mvn package'
+            }
+        }
+    }
+}
