@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+    tools{
+        maven 'mymaven'
+    }
+    stages{
+        stage('fetch the code'){
+            steps{
+                git 'https://github.com/allius01/DevOpsCodeDemo.git'
+                sh 'mvn pmd:pmd'
+            }
+        }
+        stage('test the code'){
+            steps{
+                sh 'mvn test'
+                script{
+                    timeout(time:10, unit:'MINUTES'){
+                        input(id:'BuildApproval', message: 'Do you want to proceed?', ok:'yes, Proceed')
+                    }
+                }
+            }
+        }
+        stage('Package the code'){
+            steps{
+                sh 'mvn package'
+            }
+        }
+    }
+}
